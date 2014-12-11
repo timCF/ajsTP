@@ -1,14 +1,17 @@
 defmodule AjsTP.Global do
 	defmacro __using__(_) do
 		quote location: :keep do
-			use Hashex, [__MODULE__.AjsTree]
+			use Hashex, [__MODULE__.AjsTree, __MODULE__.AjsFile]
 			defmodule AjsTree do
 				defstruct 	label: nil,
 							childs: nil,
-							expanded: true,
-							fileicon: false
+							expanded: true
 			end
-			
+			defmodule AjsFile do
+				defstruct 	label: nil,
+							childs: nil,
+							fileicon: true
+			end
 			# public
 			defmacro encode(term, expand_level \\ 0) do
 				quote location: :keep do
@@ -32,10 +35,8 @@ defmodule AjsTP.Global do
 											expanded: (this_level <= expand_level), 
 											childs: Enum.map(term, fn(v) -> encode_process(v, expand_level, "", this_level+1) end)}
 							false -> 
-								%AjsTree{	label: "#{label}#{term}", 
-											expanded: (this_level <= expand_level), 
-											childs: [],
-											fileicon: true}
+								%AjsFile{	label: "#{label}#{term}", 
+												childs: []}
 						end
 				end
 			end
