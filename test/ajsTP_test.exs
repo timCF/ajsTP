@@ -1,7 +1,12 @@
 defmodule AjsTPTest do
   use ExUnit.Case
+  require AjsTP
 
-  test "the truth" do
-    assert 1 + 1 == 2
+  test "encode" do
+    assert AjsTP.encode(%{a: [], b: 321}) == 
+    	%{	label: "Root",
+    	 	expanded: "false", 
+    	 	childs: [%{label: "b : 321", expanded: "false", childs: []}, %{label: "a : ", expanded: "false", childs: []}]}
   end
+
 end
