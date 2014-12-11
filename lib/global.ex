@@ -5,15 +5,16 @@ defmodule AjsTP.Global do
 			defmodule AjsTree do
 				defstruct 	label: nil,
 							childs: nil,
-							expanded: true
+							expanded: true,
+							fileicon: false
 			end
 			
 			# public
 			defmacro encode(term, expand_level \\ 0) do
 				quote location: :keep do
-					Exutils.prepare_to_jsonify(unquote(term), %{tuple_values_to_lists: true})
+					[Exutils.prepare_to_jsonify(unquote(term), %{tuple_values_to_lists: true})
 						|> AjsTP.encode_process(unquote(expand_level))
-							|> Exutils.prepare_to_jsonify
+							|> Exutils.prepare_to_jsonify]
 				end
 			end
 
@@ -33,7 +34,8 @@ defmodule AjsTP.Global do
 							false -> 
 								%AjsTree{	label: "#{label}#{term}", 
 											expanded: (this_level <= expand_level), 
-											childs: []}
+											childs: [],
+											fileicon: true}
 						end
 				end
 			end
